@@ -1,0 +1,64 @@
+﻿@model using homework_assignment_5_2.Models.books;
+
+//inherit helper error (dont use undershores in names)
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1> Books</h1>
+
+@{ 
+    List<SelectListItem> listItems = new List<SelectListItem>();
+}
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Post, new { style = "width:100%" }))
+{
+    //search bar
+    <input type="text" name="searchBook" class="form-control" placeholder="Search" required />
+    //drop down for type
+
+    @Html.DropDownList("Type", new SelectList(listItems, "Value", "Text"), new { @class = "form-control" });
+
+
+  <button type="submit" class="btn-btn-sucess">Search</button>
+
+    <button type="button" class="btn btn-success">Success</button>
+
+    <button type="reset">Clear</button>
+    <button type="button" class="btn btn-warning">Warning</button>
+}
+
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Author</th>
+        <th>Type</th>
+        <th>page count</th>
+        <th>points</th>
+        <th>Status</th>
+
+        @*@Html.ActionLink("View", "View", "Home", new { bookID = @books.bookid }, new { @class = "btn btn-primary" })*@
+        <th><a href="@Url.Action("Index","Home")" class="btn" title="View"></a></th>
+    </tr>
+    @foreach (var data in Model.books)
+    {
+        <td>data.bookid </td>
+        <td>data.name</td>
+        <td>data.authorid</td>
+        <td>data.typeid</td>
+        <td>data.pagecount</td>
+        <td>data.point</td>
+        <td>data.status </td>
+        <div>
+            @Html.ActionLink("View", "Index")
+        </div>
+    }
+    </tr>
+
+    //if statement within the foreach
+
+</table>
+}
+

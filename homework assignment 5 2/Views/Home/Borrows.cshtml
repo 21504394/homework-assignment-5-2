@@ -1,0 +1,29 @@
+﻿@Model using homework_assignment_5_2.Models.books;
+
+@{
+    ViewBag.Title = "Borrows";
+}
+
+<h2>books</h2>\
+
+
+<table class="table">
+    <tr>
+        <th>id</th>
+        <th>TakenDate</th>
+        <th>Brought By</th>
+        <th>Borrowed by</th>
+
+
+    </tr>
+    @foreach (var data in Model.borrows)
+    {
+        <td>data.name</td>
+        DateTime now = DateTime.Now;
+        <td> now </td>
+
+
+        @Html.ActionLink("View", "Students", "Home", new { bookID = @books.bookid }, new { @class = "btn btn-primary" })
+    }
+</table>
+

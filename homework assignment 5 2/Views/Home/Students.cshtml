@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Students";
+}
+
+<h2>Students</h2>
+@{
+    List<SelectListItem> listItems = new List<SelectListItem>();
+}
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Post, new { style = "width:100%" }))
+{
+    //search bar
+    <input type="text" name="searchStudentName" class="form-control" placeholder="Search Student Name" />
+    //drop down for type
+
+    @Html.DropDownList("Select a class", new SelectList(listItems, "Value", "Text"), new { @class = "form-control" });
+
+
+    <button type="submit" class="btn-btn-sucess">Search</button>
+
+    <button type="button" class="btn btn-success">Success</button>
+
+    <button type="reset">Clear</button>
+    <button type="button" class="btn btn-warning">Warning</button>
+
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Class</th>
+            <th>points</th>
+            <th>Borrow book</th>
+            @*this would go in the loop*@
+            @*@Html.ActionLink("View", "View", "Home", new { bookID = @books.bookid }, new { @class = "btn btn-primary" })*@
+            <p><a href="@Url.Action("Index", "Home")" class="btn" title="View"></a>"</p>
+        </tr>
+        @foreach (var books in Model)
+        {
+
+            <tr>books.name </tr>
+             <tr>books.surname</tr>
+            <tr>books.class</tr>
+            <tr>books.points</tr>
+            <tr>button</tr>
+            @if(books.status= "available")
+            {
+            <button type="submit" class="btn-btn-sucess">borrow book</button>
+            }
+            else
+            {
+            <button type="submit" class="btn-btn-sucess">return book</button>
+            }
+
+        <a href="@Url.Action("Index", "Home")" class="btn" title="borrow"></a>
+
+        }
+    </table>
+}
