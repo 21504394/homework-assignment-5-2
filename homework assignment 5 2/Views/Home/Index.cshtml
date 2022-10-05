@@ -1,4 +1,4 @@
-﻿@model using homework_assignment_5_2.Models.books;
+﻿@using homework_assignment_5_2.Models;
 
 //inherit helper error (dont use undershores in names)
 
@@ -42,19 +42,19 @@
         @*@Html.ActionLink("View", "View", "Home", new { bookID = @books.bookid }, new { @class = "btn btn-primary" })*@
         <th><a href="@Url.Action("Index","Home")" class="btn" title="View"></a></th>
     </tr>
-    @foreach (var data in Model.books)
+    @foreach (var data in Model)
     {
-        <td>data.bookid </td>
-        <td>data.name</td>
-        <td>data.authorid</td>
-        <td>data.typeid</td>
-        <td>data.pagecount</td>
-        <td>data.point</td>
-        <td>data.status </td>
-        <div>
-            @Html.ActionLink("View", "Index")
-        </div>
-    }
+        <td>@data.bookId </td>
+        <td>@data.name</td>
+        <td>@data.authorId</td>
+        <td>@data.typeid</td>
+        <td>@data.pagecount</td>
+        <td>@data.point</td>
+        <td>@data.status </td>
+        <td><button class="btn btn-primary" type="submit" onclick="location.href='@Url.Action("Borrows", "Home", new { ID = @model.bookId })'">View</button></td>
+                    
+
+                    }
     </tr>
 
     //if statement within the foreach

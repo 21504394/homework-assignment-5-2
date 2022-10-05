@@ -14,5 +14,6 @@ namespace homework_assignment_5_2.Models
         public int authorId { get; internal set; }
         public string name { get; internal set; }
         public int typeId { get; internal set; }
+        public string status { get; internal set; }
     }
 }//each book can have many authors in this case 

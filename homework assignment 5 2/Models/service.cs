@@ -71,13 +71,15 @@ namespace homework_assignment_5_2.Models
                         authorId = Convert.ToInt32(reader["authorId"]),
                         typeId = Convert.ToInt32(reader["typeId"]),
                         pagecount = Convert.ToInt32(reader["pagecount"]),
-                        point = Convert.ToInt32(reader["point"])
+                        point = Convert.ToInt32(reader["point"]),
+                        status = getstatus(books.bookId)
+
                     };
-                        bookList.Add(book);
+                    bookList.Add(book);
                 }
 
             }
-             catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
@@ -86,6 +88,8 @@ namespace homework_assignment_5_2.Models
         //VM creates a relationship between models, many to many relationships associative entity is like a VM, we want to refernce our lists 
         //view is temporary, we want to see the data 
 
+
+        //this gets the author object
         public List<authors> GetavailableAuthors()
         {
             //temporarily receives the data till its all in the model 
@@ -113,15 +117,15 @@ namespace homework_assignment_5_2.Models
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
-           
+
             return authorList;
         }
 
-        public List<authors> GetAvailableStudents()
+        public List<students> GetAvailableStudents()
         {
             //temporarily receives the data till its all in the model 
             List<students> studentList = new List<students>();
@@ -162,13 +166,122 @@ namespace homework_assignment_5_2.Models
             return studentList;
         }
 
+        public List<borrows> GetBorrowedBooks(int bookId)
+        {
+            //temporarily receives the data till its all in the model 
+            List<borrows> borrowList = new List<borrows>();
+            OpenConnection();
+            try
+            {
+                //runs the command and sends it by means of sql
+                SqlCommand command = new SqlCommand("select*from books where bookId=" + bookId, myConnection);
+                SqlDataReader reader = command.ExecuteReader();
+                //reader reads through the books
+                while (reader.Read())
+                {
+                    //our books model will be able to recieve our data ,acts as a list
+
+                    borrows borrow = new borrows()
+                    {
+                        //these are the names in the models and the names in the tables 
 
 
-    }
-    //in the controller get all authors
+                        borrowId = Convert.ToInt32(reader["borrowId"]),
+                        book = Convert.ToInt32(reader["bookId"]),
+                        Student = Convert.ToString(reader["StudentId"]),
+                        TakenOutDate = Convert.ToString(reader["takenDate"]),
+                        broughtBackDate = Convert.ToString(reader["broughtDate"]),
 
-    public string Returnbook()
-    {
-        return;
+
+                    };
+                    borrowList.Add(borrow);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return (borrowList);
+        }
+
+        public void borrowbook(int ID, int StudID)
+        {
+            //Formate Date so it can go in SQL
+            //makes a new record in the borrows table it makes the brought back date null and fills in the null when its return
+            myConnection.Open();
+            DateTime myDateTime = DateTime.Now;
+            string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            SqlCommand query = new SqlCommand("INSERT INTO borrows (studentId, bookId, takenDate, broughtDate) Values(" + StudID + ", " + ID + ", CAST('" + sqlFormattedDate + "' AS DATETIME), " + " NULL)", myConnection);
+            query.ExecuteNonQuery();
+            myConnection.Close();
+        }
+
+        // Returns the book by updating the broughtDate
+        public void returnbook(int BorrowID)
+        {
+
+            //Formate Date so it can go in SQL
+            DateTime myDateTime = DateTime.Now;
+            string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+            myConnection.Open();
+            SqlCommand query = new SqlCommand("UPDATE borrows set broughtDate = CAST('" + sqlFormattedDate + "' AS DATETIME) WHERE borrowId = " + BorrowID, myConnection);
+            query.ExecuteNonQuery();
+
+
+
+        }
+        public string getstatus(int bookId)
+        {
+            string status = "";
+        string broughtdate;
+        
+        myConnection.Open();
+            //gets the lotest borrow using a subquery
+            SqlCommand query = new SqlCommand("SELECT bookId, takenDate, broughtDate FROM borrows WHERE takenDate = (select MAX(takenDate) From borrows where bookId = " + bookId + ")", myConnection);
+        SqlDataReader myreader = query.ExecuteReader();
+            while (myreader.Read())
+            {
+                
+                //Checks the broughtdate for null and assigns status according to it
+                if (myreader.IsDBNull(2))
+                {
+                    status = "Out";
+                }
+                else
+                {
+                    status = "Available";
+                }
+            }
+            myConnection.Close();
+            return status;
+        }
+
+        public int getbookborrowCount(int bookId)
+        {
+           
+            int borrowed = 0;
+            try
+            {
+                myConnection.Open();
+                //gets all the occurences for the borrowed book and counts them
+                SqlCommand query = new SqlCommand("SELECT COUNT(*) as borrows FROM borrows WHERE bookId = " + bookId, myConnection);
+                SqlDataReader myreader = query.ExecuteReader();
+                while (myreader.Read())
+                {
+                    borrowed = Convert.ToInt32(myreader["borrows"]);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+            return borrowed;
+        }
     }
 }

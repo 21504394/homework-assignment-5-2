@@ -1,4 +1,4 @@
-﻿@Model using homework_assignment_5_2.Models.books;
+﻿@using homework_assignment_5_2.Models;
 
 @{
     ViewBag.Title = "Borrows";
@@ -23,7 +23,8 @@
         <td> now </td>
 
 
-        @Html.ActionLink("View", "Students", "Home", new { bookID = @books.bookid }, new { @class = "btn btn-primary" })
+        @*@Html.ActionLink("View", "Students", "Home", new { bookID = @books.bookid }, new { @class = "btn btn-primary" })*@
     }
+
 </table>
 
